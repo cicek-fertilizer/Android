@@ -3,9 +3,6 @@ package com.hackathon.di.impl
 import android.util.Log
 import com.hackathon.di.ILogger
 
-/**
- * Default implementation of ILogger for Android
- */
 class AndroidLogger(
     private val tag: String
 ) : ILogger {

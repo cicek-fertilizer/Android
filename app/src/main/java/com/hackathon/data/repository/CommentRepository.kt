@@ -22,10 +22,10 @@ class CommentRepository(
         private val logger: ILogger,
         private val commentApi: CommentApi
 ) {
-    fun getComments(productId: Int, storeId: Int): ApiResult<GetCommentResponse> {
+    fun getComments(productId: Int, storeId: Int, shelfId: Int): ApiResult<GetCommentResponse> {
         val uid: Int? = PreferenceUtils.defaultPrefs(context)[Constants.UID]
         return if (uid != null && uid > 0) {
-            commentApi.getComments(GetCommentRequest(uid, storeId, productId)).flatMap {
+            commentApi.getComments(GetCommentRequest(uid, storeId, productId, shelfId)).flatMap {
                 if (it.isSuccessful && it.body() is GetCommentResponse) {
                     val response = it.body() as GetCommentResponse
                     Ok(response).single()

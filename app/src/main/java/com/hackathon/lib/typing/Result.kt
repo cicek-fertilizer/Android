@@ -11,7 +11,7 @@ sealed class Result<out S, out E> {
 }
 
 data class Err<out E>(
-    val error: E
+        val error: E
 ) : Result<Nothing, E>() {
     override val errVariant: Boolean = true
     override val okVariant: Boolean = false
@@ -19,7 +19,7 @@ data class Err<out E>(
 }
 
 data class Ok<out S>(
-    val value: S
+        val value: S
 ) : Result<S, Nothing>() {
     override val errVariant: Boolean = false
     override val okVariant: Boolean = true

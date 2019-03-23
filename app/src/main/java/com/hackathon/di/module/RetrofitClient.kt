@@ -3,9 +3,9 @@ package com.hackathon.di.module
 import android.content.Context
 import com.hackathon.R
 import com.hackathon.data.api.CommentApi
+import com.hackathon.data.api.PurchaseApi
 import com.hackathon.data.api.UserApi
 import okhttp3.OkHttpClient
-import okhttp3.Protocol
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -20,6 +20,7 @@ class RetrofitClient(
 ) {
     fun userApi(): UserApi = getRetrofit().create(UserApi::class.java)
     fun commentApi(): CommentApi = getRetrofit().create(CommentApi::class.java)
+    fun purchaseApi(): PurchaseApi = getRetrofit().create(PurchaseApi::class.java)
 
     private fun getRetrofit(): Retrofit {
 

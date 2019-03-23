@@ -13,8 +13,8 @@ class CommentTask(
         private val logger: ILogger,
         private val commentRepository: CommentRepository
 ) : BaseTask() {
-    fun getComments(productId: Int, storeId: Int): SingleResult<GetCommentResponse, BaseError> {
-        return commentRepository.getComments(productId, storeId).flatMap {
+    fun getComments(productId: Int, storeId: Int, shelfId: Int): SingleResult<GetCommentResponse, BaseError> {
+        return commentRepository.getComments(productId, storeId, shelfId).flatMap {
             it.single()
         }
     }

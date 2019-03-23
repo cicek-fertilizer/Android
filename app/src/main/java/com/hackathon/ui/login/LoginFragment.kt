@@ -6,10 +6,14 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.hackathon.R
 import com.hackathon.databinding.LoginFragmentBinding
 import com.hackathon.di.ILogger
 import com.hackathon.ui.base.BaseFragment
-import com.hackathon.ui.splash.SplashFragmentDirections
 import org.koin.android.ext.android.inject
 
 
@@ -26,7 +30,14 @@ class LoginFragment : BaseFragment<LoginViewModel>(LoginViewModel::class) {
 
         // Bind View Model to the layout
         dataBinding = LoginFragmentBinding.inflate(inflater, container, false)
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         dataBinding.lifecycleOwner = this
+
+        requireActivity().window.apply {
+            clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = ContextCompat.getColor(requireActivity(), R.color.secondaryColor)
+        }
 
         dataBinding.username.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -54,6 +65,7 @@ class LoginFragment : BaseFragment<LoginViewModel>(LoginViewModel::class) {
         })
         dataBinding.loginButton.setOnClickListener {
             viewModel.isLoggedIn()
+            hideKeyboard()
             dataBinding.progressLayout.visibility = View.VISIBLE
         }
 
@@ -69,7 +81,19 @@ class LoginFragment : BaseFragment<LoginViewModel>(LoginViewModel::class) {
                 },
                 onError = {
                     dataBinding.progressLayout.visibility = View.GONE
-                    showErrorDialog(it)
+                    val (errorTitle, errorContent) = it.parseError(requireContext())
+                    AlertDialog.Builder(requireActivity())
+                            .setTitle(errorTitle)
+                            .setMessage(errorContent)
+                            .setCancelable(true)
+                            .setOnCancelListener {
+                                dataBinding.progressLayout.visibility = View.GONE
+                            }
+                            .setPositiveButton(R.string.close) { dialog, _ ->
+                                dialog.cancel()
+                            }
+                            .create()
+                            .show()
                 })
     }
 

@@ -1,6 +1,5 @@
 package com.hackathon.ui.login
 
-import android.content.Context
 import com.hackathon.data.error.LoginErrorType
 import com.hackathon.di.ILogger
 import com.hackathon.di.module.SchedulersModule

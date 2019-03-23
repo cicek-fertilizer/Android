@@ -14,7 +14,7 @@ object None : Option<Nothing>() {
 }
 
 data class Some<out T>(
-    val value: T
+        val value: T
 ) : Option<T>() {
     override val someVariant: Boolean = true
 }

@@ -9,9 +9,6 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 
-/**
- * Base View Model class for all View Models, contains simple event functions
- */
 abstract class BaseViewModel(
         val schedulersModule: SchedulersModule
 ) : ViewModel() {

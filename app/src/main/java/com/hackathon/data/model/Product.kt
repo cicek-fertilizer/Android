@@ -5,5 +5,8 @@ data class Product(
         val productId: Int,
         val productName: String,
         val tags: List<String>,
-        val imageUrl: String
+        val imageUrl: String,
+        val price: String? = null,
+        val currentPrice: String? = null,
+        val taksit: String? = null
 )

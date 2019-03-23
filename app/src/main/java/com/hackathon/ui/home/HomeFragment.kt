@@ -2,6 +2,9 @@ package com.hackathon.ui.home
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hackathon.R
 import com.hackathon.databinding.HomeFragmentBinding
 import com.hackathon.di.ILogger
@@ -17,20 +20,27 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class) {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        // Base Fragment on create view, calls view model on screen created
         super.onCreateView(inflater, container, savedInstanceState)
 
-        // Bind View Model to the layout
         dataBinding = HomeFragmentBinding.inflate(inflater, container, false)
         dataBinding.lifecycleOwner = this
+        (requireActivity() as AppCompatActivity).supportActionBar?.show()
         setHasOptionsMenu(true)
 
-        dataBinding.progressLayout.visibility = View.GONE
+        requireActivity().window.apply {
+            clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = ContextCompat.getColor(requireActivity(), R.color.primaryDarkColor)
+        }
+
+        dataBinding.progressLayout.visibility = View.VISIBLE
+        dataBinding.recommendationsRecyclerView.layoutManager = LinearLayoutManager(context)
 
         dataBinding.cameraButton.setOnClickListener {
             navigateToCamera()
         }
 
+        viewModel.fetchRecommendations()
 
         return dataBinding.root
     }
@@ -44,6 +54,15 @@ class HomeFragment : BaseFragment<HomeViewModel>(HomeViewModel::class) {
                 },
                 onError = {
                     navigateToLogin()
+                })
+
+        viewModel.onRecommendationsFetched.runWhenFinished(this,
+                onSuccess = {
+                    dataBinding.progressLayout.visibility = View.GONE
+                    dataBinding.recommendationsRecyclerView.adapter = ProductAdapter(requireContext(), it)
+                },
+                onError = {
+                    dataBinding.progressLayout.visibility = View.GONE
                 })
     }
 

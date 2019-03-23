@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.hackathon.R
 import com.hackathon.databinding.SplashFragmentBinding
 import com.hackathon.di.ILogger
 import com.hackathon.ui.base.BaseFragment
@@ -19,12 +23,17 @@ class SplashFragment: BaseFragment<SplashViewModel>(SplashViewModel::class) {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        // Base Fragment on create view, calls view model on screen created
         super.onCreateView(inflater, container, savedInstanceState)
 
-        // Bind View Model to the layout
         dataBinding = SplashFragmentBinding.inflate(inflater, container, false)
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         dataBinding.lifecycleOwner = this
+
+        requireActivity().window.apply {
+            clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = ContextCompat.getColor(requireActivity(), R.color.secondaryColor)
+        }
 
         viewModel.isLoggedIn(requireContext())
 
